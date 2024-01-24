@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import serverCom from './servercom'
 
 
 const Filter = (props) => {
@@ -8,6 +9,8 @@ const Filter = (props) => {
     <div>search <input value={props.search} onChange={props.handleSearch}/></div>
   )
 }
+
+
 
 const PersonForm = (props) => {
   return (
@@ -24,15 +27,20 @@ const PersonForm = (props) => {
 }
 
 const Persons = (props) => {
+
   return (
     <div>
-    {props.persons.filter(props.filterSearch).map(person => <div key={person.name}>{person.name} {person.number}</div>)}
+    {props.persons.filter(props.filterSearch).map(person => <div key={person.name}>{person.name} {person.number} <button onClick={() => props.deletefromregistry(person)}>Delete</button> </div>)}
     </div>
   )
 }
 
 const App = () => {
 
+  function deletefromregistry(victim){
+    if (confirm("You sure?")){
+    serverCom.killPerson(victim).then(response => {      console.log(response)    })}
+  }
   function filterSearch(people){
     if (people.name.indexOf(search) != -1){
       return true
@@ -46,12 +54,7 @@ const App = () => {
   const [newNumber, setNumber] = useState('')
   const [search, setSearch] = useState('')
 
-  useEffect(() => {
-  axios.get('http://localhost:3001/persons').then(response => {
-    setPersons(response.data)
 
-  })
-}, [])
 
   const handleChangeNumber = (event) => {
     setNumber(event.target.value)
@@ -64,29 +67,59 @@ const App = () => {
       setSearch(event.target.value)
     }
 
+    function containsObject(obj, list) {
+      var i;
+      for (i = 0; i < list.length; i++) {
+          if (list[i].name === obj) {
+              return true;
+          }
+      }
+  
+      return false;
+  }
+  function returnObject(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i].name === obj) {
+            return list[i];
+        }
+    }
 
+    return false;
+}
   const addPerson = (event) => {    event.preventDefault()    
-    let justNames = persons.map(person => person.name)
-    if (justNames.indexOf(newName) != -1){
-      alert(newName + " is already in the registry")
+
+    if (containsObject(newName, persons)){
+      if (confirm(newName + " is already in the registry. Would you like to change their number?")){
+        serverCom.replacenumber(returnObject(newName, persons), {name: newName, number: newNumber}).then(response => {      console.log(response)    })
+      }
     }
     else {
       setPersons([...persons, {name: newName, number: newNumber}])
       setNewName("")
       setNumber("")  
+      serverCom.create({name: newName, number: newNumber}).then(response => {      console.log(response)    })
     }
   }
 
+  serverCom.Update().then(response => {
+    setPersons(response.data)})
+
+
   return (
     <div>
+      
+      
       <h2>Phonebook</h2>
       <Filter search={search} handleSearch={handleSearch}/>
       <h3>Add new</h3>
-      <PersonForm addPerson={addPerson} newName={newName} handleNoteChange={handleNoteChange} newNumber={newNumber} handleChangeNumber={handleChangeNumber} />
+      <PersonForm addPerson={addPerson} newName={newName} handleNoteChange={handleNoteChange} 
+      newNumber={newNumber} handleChangeNumber={handleChangeNumber} />
       <h2>Numbers</h2>
-      <Persons persons={persons} filterSearch={filterSearch} />
+      <Persons persons={persons} filterSearch={filterSearch} deletefromregistry={deletefromregistry}/>
     </div>
   )
+
 
 }
 
