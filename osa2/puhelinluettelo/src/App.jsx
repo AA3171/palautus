@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+
 
 const Filter = (props) => {
   
@@ -44,6 +46,13 @@ const App = () => {
   const [newNumber, setNumber] = useState('')
   const [search, setSearch] = useState('')
 
+  useEffect(() => {
+  axios.get('http://localhost:3001/persons').then(response => {
+    setPersons(response.data)
+
+  })
+}, [])
+
   const handleChangeNumber = (event) => {
     setNumber(event.target.value)
   }
@@ -57,7 +66,6 @@ const App = () => {
 
 
   const addPerson = (event) => {    event.preventDefault()    
-    console.log('Wahaha', event.target)
     let justNames = persons.map(person => person.name)
     if (justNames.indexOf(newName) != -1){
       alert(newName + " is already in the registry")
