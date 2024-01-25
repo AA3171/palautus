@@ -1,35 +1,96 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import axios from 'axios'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const Lan = (props) => {
+  
   return (
-    <>
+    props.lanlist.map(lan => <div key={lan}><p></p>-{lan.slice(7, -1)} </div>)
+    )
+}
+
+
+
+const App = () => {
+  ///Settings consts
+  const [search, setSearch] = useState('')
+  const [flag, setFlag] = useState('')
+
+  const [countries, setCountries] = useState([
+    {name:{common: "Finland"}, flags: {png: "a"}, languages: {fin: "finnish"}}
+  ]) 
+  ///Functions
+  function containsObject(country){
+    if (country.name.common.toLowerCase().indexOf(search.toLowerCase()) != -1){
+      return true
+    }
+  }
+  function showCountry(count){
+    setSearch(count)
+  }
+
+const handleSearchChange = (event) => {    
+  console.log(event.target.value)    
+  setSearch(event.target.value)
+  }
+
+  axios.get('https://studies.cs.helsinki.fi/restcountries/api/all').then(response => { 
+    setCountries(response.data)
+    if (countries.filter(containsObject).length === 1){
+      setFlag(countries.filter(containsObject)[0].flags.png)
+    }
+  })
+  if (countries.filter(containsObject).length <= 10 && countries.filter(containsObject).length > 1){
+  return (
+   <div>
+        <form>
+    <div>
+      Search: <input value={search} onChange={handleSearchChange}/>
+    </div>
+  </form>
+  {countries.filter(containsObject).map(country => <div key={country.name.common}>{country.name.common} <button onClick={() => showCountry(country.name.common)}>Show</button></div>)}
+   </div>
+  )}
+  if (countries.filter(containsObject).length > 10){
+  return (
+    <div>
+    <form>
+<div>
+  Search: <input value={search} onChange={handleSearchChange}/>
+</div>
+</form>
+Too many countries
+</div>
+  )}
+  if (countries.filter(containsObject).length === 1){
+    return (
+     <div>
+          <form>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        Search: <input value={search} onChange={handleSearchChange}/>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </form>
+    {countries.filter(containsObject).map(country => <div key={country.name.common}>{country.name.common} <p></p> Capital {country.capital} <p></p> Area {country.area} km²
+    <p></p> <img src={flag} alt="flag"></img> <p></p>
+    languages <Lan lanlist={JSON.stringify(country.languages).replace("{", "").replace("}","").split(",")}/>
+
+
+    
+    </div>)}
+
+     </div>
+    )}
+
+      return (
+       <div>
+            <form>
+        <div>
+          Search: <input value={search} onChange={handleSearchChange}/>
+        </div>
+      </form>
+      Skill issue
+       </div>
+      )
+      
 }
 
 export default App
