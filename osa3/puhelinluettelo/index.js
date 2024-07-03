@@ -1,8 +1,11 @@
 const express = require('express')
 var morgan = require('morgan')
 const app = express()
+morgan.token('body', req => {
+    return JSON.stringify(req.body)
+  })
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 let persons = [  
     {    id: "1",    nimi: "Mika Häkkinen",    numero: 546756756  },  
     {    id: "2",    nimi: "Koira",    numero: 56756756  },  
@@ -42,7 +45,7 @@ app.delete('/api/persons/:id', (request, response) => {
 
 const generateId = () => {
 
-    return Math.floor(Math.random() * 1000000)
+    return String(Math.floor(Math.random() * 1000000))
     }
           
 app.post('/api/persons', (request, response) => {
@@ -69,9 +72,9 @@ app.post('/api/persons', (request, response) => {
         }
           
         const person = {
+            id: generateId(),
             nimi: body.nimi,
             numero: body.numero,
-            id: generateId(),
         }
           
         persons = persons.concat(person)
