@@ -1,4 +1,4 @@
-//($env:VITE_SOME_KEY="adf83563828a7162d4fc35bea5b9ea21") -and (npm run dev)
+//($env:VITE_SOME_KEY="") -and (npm run dev)
 import { useState } from 'react'
 import axios from 'axios'
 const api_key = import.meta.env.VITE_SOME_KEY
