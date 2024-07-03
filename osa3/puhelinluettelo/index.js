@@ -37,12 +37,45 @@ app.delete('/api/persons/:id', (request, response) => {
       
         response.status(204).end()
       })
+
+const generateId = () => {
+
+    return Math.floor(Math.random() * 1000000)
+    }
+          
 app.post('/api/persons', (request, response) => {
-        const person = request.body  
-        console.log(person)  
-        response.json(person)})
+    const body = request.body
+          
+    if (!body.nimi) {
+        return response.status(400).json({ 
+        error: 'nimi puuttuu' 
+        })
+    }
+    for (let i = 0; i < persons.length; i++) { 
+        if (body.nimi == persons[i]["nimi"]){
+            return response.status(400).json({
+                error: 'Nimi on jo luettelossa'
+            })
+        }
+    }
+    
 
-
+    if (!body.numero) {
+        return response.status(400).json({ 
+            error: 'numero puuttuu' 
+        })
+        }
+          
+        const person = {
+            nimi: body.nimi,
+            numero: body.numero,
+            id: generateId(),
+        }
+          
+        persons = persons.concat(person)
+          
+        response.json(person)
+        })
 
   
 
