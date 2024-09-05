@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import serverCom from './servercom'
+import ServerCom from './Servercom'
 import './App.css'
 
 
@@ -54,7 +54,7 @@ const App = () => {
 
   function deletefromregistry(victim){
     if (confirm("You sure?")){
-    serverCom.killPerson(victim).then(response => {      console.log(response)    })}
+    ServerCom.killPerson(victim).then(response => {      console.log(response)    })}
     setalertMessage("Deleted successfully")
   }
   function filterSearch(people){
@@ -107,7 +107,7 @@ const App = () => {
 
     if (containsObject(newName, persons)){
       if (confirm(newName + " is already in the registry. Would you like to change their number?")){
-        serverCom.replacenumber(returnObject(newName, persons), {name: newName, number: newNumber})
+        ServerCom.replacenumber(returnObject(newName, persons), {name: newName, number: newNumber})
         .then(response => {      console.log(response)    })
         .catch(error => {setalertMessage('404, person not found')})
         setalertMessage(newName + " number changed successfully")
@@ -116,14 +116,14 @@ const App = () => {
     }
     else {
       setPersons([...persons, {name: newName, number: newNumber}])
-      serverCom.create({name: newName, number: newNumber}).then(response => {      console.log(response)    })
+      ServerCom.create({name: newName, number: newNumber}).then(response => {      console.log(response)    })
       setalertMessage(newName + " added successfully")
       setNewName("")
       setNumber("")  
     }
   }
 
-  serverCom.Update().then(response => {
+  ServerCom.Update().then(response => {
     setPersons(response.data)})
 
   if (alertMessage != null){
