@@ -13,7 +13,7 @@ morgan.token('body', req => {
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 let persons = [  
-    {    id: "1",    name: "Mika Häkkinen",    number: 546756756  },  
+    {    id: "1",    name: "Mika Häkkinen",    number: 5467567356  },  
     {    id: "2",    name: "Koira",    number: 56756756  },  
     {    id: "3",    name: "Pankki automaatti",    number: 345643  }]
 
