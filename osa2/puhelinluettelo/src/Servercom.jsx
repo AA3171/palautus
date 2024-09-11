@@ -1,19 +1,21 @@
 import axios from "axios"
 
+const baseUrl = '/api/persons'
+
 const Update = () => {
-    return axios.get('http://localhost:3001/api/persons')
+    return axios.get(baseUrl)
 }
 
 const create = newObject => {
-    return axios.post('http://localhost:3001/api/persons', newObject)
+    return axios.post(baseUrl, newObject)
 }
 
 const killPerson = (oldObject) => {
     console.log(oldObject.id)
-    return axios.delete('http://localhost:3001/api/persons/' + oldObject.id)
+    return axios.delete(baseUrl + '/' + oldObject.id)
 }
 
 const replacenumber = (oldObject, newnumber) => {
-    return axios.put('http://localhost:3001/api/persons/' + oldObject.id, newnumber)
+    return axios.put(baseUrl + '/' + oldObject.id, newnumber)
 }
 export default {Update, create, killPerson, replacenumber}
