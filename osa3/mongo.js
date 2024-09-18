@@ -18,7 +18,7 @@ mongoose.connect(url)
 const noteSchema = new mongoose.Schema({
   name: String,
   number: String,
-  important: Boolean,
+
 })
 
 const Note = mongoose.model('People', noteSchema)
@@ -26,7 +26,7 @@ if (process.argv[3]){
 const note = new Note({
   name: person, 
   number: number,
-  important: true,
+
 })
 
 note.save().then(result => {

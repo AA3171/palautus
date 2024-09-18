@@ -1,7 +1,18 @@
+require('dotenv').config()
 const express = require('express')
 var morgan = require('morgan')
-
+const Note = require('./models/people')
 const cors = require('cors')
+const mongoose = require('mongoose')
+
+///mongodb+srv://aa3171:${password}@cluster0.uhwcr.mongodb.net/phonebook?retryWrites=true&w=majority
+
+
+const url = process.env.PORT
+
+console.log('connecting to', url)
+
+
 
 
 
@@ -28,7 +39,10 @@ app.get('/info', (request, response) => {
   })
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+    Note.find({}).then(results => {
+        response.json(results)
+      })
+      
 })
 
 app.get('/api/persons/:id', (request, response) => {
