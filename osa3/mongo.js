@@ -16,14 +16,16 @@ mongoose.set('strictQuery', false)
 mongoose.connect(url)
 
 const noteSchema = new mongoose.Schema({
-  content: Object,
+  name: String,
+  number: String,
   important: Boolean,
 })
 
 const Note = mongoose.model('People', noteSchema)
 if (process.argv[3]){
 const note = new Note({
-  content: {name: person, number: number},
+  name: person, 
+  number: number,
   important: true,
 })
 
@@ -35,7 +37,7 @@ else{
     console.log("Phonebook:")
     Note.find({}).then(result => {
         result.forEach(note => {
-          console.log(note.content.name + " " + note.content.number)
+          console.log(note.name + " " + note.number)
         })
         mongoose.connection.close()
       })
