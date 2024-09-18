@@ -124,6 +124,7 @@ const App = () => {
   }
 
   ServerCom.Update().then(response => {
+
     setPersons(response.data)})
 
   if (alertMessage != null){

@@ -46,8 +46,7 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    const person = persons.find(person => person.id === id)
+    Note.findById(request.params.id).then(person => {
     if (person) {    
             response.json(person)  
             } 
@@ -55,7 +54,7 @@ app.get('/api/persons/:id', (request, response) => {
                 response.status(404).end()
             }
     })
-
+})
 app.delete('/api/persons/:id', (request, response) => {
         const id = request.params.id
         persons = persons.filter(person => person.id !== id)
@@ -69,6 +68,38 @@ const generateId = () => {
     }
           
 app.post('/api/persons', (request, response) => {
+    const body = request.body
+  
+    if (!body.name) {
+        return response.status(400).json({ 
+        error: 'nimi puuttuu' 
+        })
+    }
+    for (let i = 0; i < persons.length; i++) { 
+        if (body.name == persons[i]["name"]){
+            return response.status(400).json({
+                error: 'Nimi on jo luettelossa'
+            })
+        }
+    }
+    if (!body.number) {
+        return response.status(400).json({ 
+            error: 'numero puuttuu' 
+        })
+        }
+          
+
+    const note = new Note({
+        name: body.name, 
+        number: body.number,
+      })
+
+    note.save().then(savedNote => {
+      response.json(savedNote)
+    })
+    
+    
+    /*(request, response) => {
     const body = request.body
           
     if (!body.name) {
@@ -96,10 +127,8 @@ app.post('/api/persons', (request, response) => {
             name: body.name,
             number: body.number,
         }
-          
-        persons = persons.concat(person)
-          
-        response.json(person)
+          */
+  
         })
 
   
