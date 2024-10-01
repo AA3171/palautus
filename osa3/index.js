@@ -71,11 +71,12 @@ const generateId = () => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
   
-    if (!body.name) {
+    if (body.name.length < 3) {
         return response.status(400).json({ 
-        error: 'nimi puuttuu' 
+        error: 'nimi on liian lyhyt' 
         })
     }
+    
     for (let i = 0; i < persons.length; i++) { 
         if (body.name == persons[i]["name"]){
             return response.status(400).json({
