@@ -1,0 +1,15 @@
+{
+
+            "title": "I hate men",
+            "author": "V6",
+            "url":"no thank you",
+            "likes":0,
+            "user":"6826eee7cfdd378779feae83"
+}
+
+{
+
+            "username": "V6",
+            "password": "turbo"
+
+}
